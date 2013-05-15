@@ -22,6 +22,15 @@
       display: table-cell;
       text-align: center;
       vertical-align: middle;
+      opacity: 0;
+      padding-top: 10px;
+
+      -webkit-transition: opacity 2s ease-in-out, padding 2s ease-in-out;
+    }
+
+    body.transition .cell-middle {
+      opacity: 1;
+      padding-top: 0;
     }
 
     .cell-middle p {

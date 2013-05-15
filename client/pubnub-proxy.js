@@ -49,7 +49,7 @@
 document.addEventListener('DOMContentLoaded', function (event) {
   (function (window) {
     "use strict";
-    
+
     var METHOD = {
       GET: "GET",
       POST: "POST",
@@ -61,6 +61,9 @@ document.addEventListener('DOMContentLoaded', function (event) {
     // PubNub Proxy Class
     ///////
     function PubNubProxy(options) {
+      var self = this;
+
+      this.options = options;
       this.connection = options.connection;
       this.uuid = options.uuid || this.connection.uuid();
 
@@ -71,9 +74,17 @@ document.addEventListener('DOMContentLoaded', function (event) {
       console.log("connecting...");
       this.connection.subscribe({
         channel: this.uuid,
-        callback: this.handleResponse,
+        callback: function () {
+          self.handleResponse.apply(self, arguments);
+        },
         connect: options.callback
       });
+
+      if (options.intercept_links === true || options.intercept_forms === true) {
+        window.addEventListener('hashchange', function (event) {
+          self.sendRequest(window.location.href, METHOD.GET);
+        });
+      }
     }
 
     PubNubProxy.prototype.handleResponse = function (message) {
@@ -86,6 +97,23 @@ document.addEventListener('DOMContentLoaded', function (event) {
         console.log(element);
 
         document.replaceChild(element, document.documentElement);
+
+        this.postRender();
+      }
+    };
+
+    PubNubProxy.prototype.postRender = function() {
+      if (this.options.intercept_links === true) {
+        var links = document.querySelectorAll('a');
+        for (var i = links.length - 1; i >= 0; i--) {
+          var link = links[i];
+          link.addEventListener('click', function (event) {
+            location.hash = event.target.pathname;
+
+            event.preventDefault();
+            return false;
+          });
+        };
       }
     };
 
@@ -115,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
           return self.sendRequest(url, method);
         }
       }
-    }
+    };
 
     PubNubProxy.prototype.destroy = function() {
       this.connection.unsubscribe({
@@ -126,6 +154,9 @@ document.addEventListener('DOMContentLoaded', function (event) {
       delete this.uuid;
     };
 
+    // Transiiton the page in.
+    document.body.className = "transition";
+
     // Initialize the PubNub connection.
     this.pubnub = PUBNUB.init({
       subscribe_key: "sub-c-fe7719da-bd85-11e2-8f85-02ee2ddab7fe",
@@ -135,9 +166,11 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
     // Initialize the proxy object.
     this.proxy = new PubNubProxy({
-      connection: this.pubnub, 
-      uuid: 'client', 
+      connection: this.pubnub,
+      //uuid: 'client',
       intercept_ajax: true,
+      intercept_links: true,
+      intercept_forms: true,
       callback: function () {
         // Call the first page request.
         proxy.sendRequest(window.location.href, METHOD.GET);
