@@ -36,6 +36,14 @@ this.proxy = new PubNubProxy({
 });
 ```
 
+## Traditional REST API
+
+![PubNub Proxy](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-traditional-rest.png)
+
+## PubNub Network Terminators
+
+![PubNub Proxy](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-traditional-rest.png)
+
 # PubNub Python Terminator
 
 The server is started by cd-ing into the server directory and running
