@@ -166,8 +166,8 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
     // Initialize the proxy object.
     this.proxy = new PubNubProxy({
-      connection: this.pubnub, 
-      uuid: 'client', 
+      connection: this.pubnub,
+      //uuid: 'client',
       intercept_ajax: true,
       intercept_links: true,
       intercept_forms: true,
