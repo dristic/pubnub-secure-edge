@@ -48,6 +48,8 @@
 
 document.addEventListener('DOMContentLoaded', function (event) {
   (function (window) {
+    "use strict";
+    
     var METHOD = {
       GET: "GET",
       POST: "POST",
@@ -58,15 +60,19 @@ document.addEventListener('DOMContentLoaded', function (event) {
     /////
     // PubNub Proxy Class
     ///////
-    function PubNubProxy(connection, uuid, onConnect) {
-      this.connection = connection;
-      this.uuid = uuid;
+    function PubNubProxy(options) {
+      this.connection = options.connection;
+      this.uuid = options.uuid || this.connection.uuid();
+
+      if (options.intercept_ajax === true) {
+        this.interceptAjax();
+      }
 
       console.log("connecting...");
       this.connection.subscribe({
         channel: this.uuid,
         callback: this.handleResponse,
-        connect: onConnect
+        connect: options.callback
       });
     }
 
@@ -99,6 +105,27 @@ document.addEventListener('DOMContentLoaded', function (event) {
       });
     };
 
+    PubNubProxy.prototype.interceptAjax = function () {
+      var open = XMLHttpRequest.prototype.open,
+          self = this;
+      XMLHttpRequest.prototype.open = function (method, url) {
+        if (/pubnub/ig.test(url) == true) {
+          return open.apply(this, arguments);
+        } else {
+          return self.sendRequest(url, method);
+        }
+      }
+    }
+
+    PubNubProxy.prototype.destroy = function() {
+      this.connection.unsubscribe({
+        channel: this.uuid
+      });
+
+      delete this.connection;
+      delete this.uuid;
+    };
+
     // Initialize the PubNub connection.
     this.pubnub = PUBNUB.init({
       subscribe_key: "sub-c-fe7719da-bd85-11e2-8f85-02ee2ddab7fe",
@@ -107,16 +134,15 @@ document.addEventListener('DOMContentLoaded', function (event) {
     });
 
     // Initialize the proxy object.
-    this.proxy = new PubNubProxy(this.pubnub, 'client', function () {
-      // Call the first page request.
-      proxy.sendRequest(window.location.href, METHOD.GET);
+    this.proxy = new PubNubProxy({
+      connection: this.pubnub, 
+      uuid: 'client', 
+      intercept_ajax: true,
+      callback: function () {
+        // Call the first page request.
+        proxy.sendRequest(window.location.href, METHOD.GET);
+      }
     });
-
-    window.XMLHttpRequest.prototype.open = function () {
-      console.log(arguments);
-
-      //return proxy.sendRequest(arguments[1], arguments[0]);
-    }
 
   }).call(window, window);
 });
