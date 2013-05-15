@@ -49,7 +49,7 @@
 document.addEventListener('DOMContentLoaded', function (event) {
   (function (window) {
     "use strict";
-    
+
     var METHOD = {
       GET: "GET",
       POST: "POST",
@@ -125,6 +125,9 @@ document.addEventListener('DOMContentLoaded', function (event) {
       delete this.connection;
       delete this.uuid;
     };
+
+    // Transiiton the page in.
+    document.body.className = "transition";
 
     // Initialize the PubNub connection.
     this.pubnub = PUBNUB.init({
