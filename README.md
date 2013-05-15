@@ -8,23 +8,25 @@ The PubNub Proxy takes a web request and proxies it through the PubNub service. 
 # JavaScript Client
 The client works by making the initial page request and optionally intercepting all AJAX and link requests after the page is loaded. The first step is initialzing a connection with pubnub and then initializing the proxy object.
 
-    // Initialize the PubNub connection.
-    this.pubnub = PUBNUB.init({
-      subscribe_key: "demo",
-      publish_key: "demo"
-    });
+```javascript
+// Initialize the PubNub connection.
+this.pubnub = PUBNUB.init({
+  subscribe_key: "demo",
+  publish_key: "demo"
+});
 
-    // Initialize the proxy object.
-    this.proxy = new PubNubProxy({
-      connection: this.pubnub,
-      intercept_ajax: true,
-      intercept_links: true,
-      intercept_forms: true,
-      callback: function () {
-        // Call the first page request.
-        proxy.sendRequest(window.location.href, METHOD.GET);
-      }
-    });
+// Initialize the proxy object.
+this.proxy = new PubNubProxy({
+  connection: this.pubnub,
+  intercept_ajax: true,
+  intercept_links: true,
+  intercept_forms: true,
+  callback: function () {
+    // Call the first page request.
+    proxy.sendRequest(window.location.href, METHOD.GET);
+  }
+});
+```
 
 # PubNubProxy
 ## constructor([options])
