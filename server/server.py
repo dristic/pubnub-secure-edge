@@ -57,11 +57,13 @@ def request(url):
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 def receiver(message):
     try:
-        url      = "/".join((message['request']['url']or'///').split('/')[3:])
+        url      = message['request']['url']or'///'
+        url      = "/".join((url).split('/')[3:])
+        if '#' in url: url = url.split('#')[1]
         response = request("http://localhost/%s" % url)[:18000]
 
         print("PROXYING: %s" % url)
-        print("RESPONSE: %s" % response)
+        #print("RESPONSE: %s" % response)
         print("RESPONSE-SIZE: %s" % len(response))
         print("BROKER: %s" % pubnub.publish({
             'channel' : message['response_channel'],
