@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
+from pubnub import Pubnub as PubnubNetwork
+
 import sys
 import urllib2
-from pubnub import Pubnub as PubnubNetwork
 
 """
 {"response_channel":"client","request":{"url":"http://a.pubnub.com/time/0"}}
@@ -11,7 +12,7 @@ from pubnub import Pubnub as PubnubNetwork
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ## Get Args
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-def getarg(pos): return pos in sys.argv and sys.argv[pos] or None
+def getarg(pos): return pos <= len(sys.argv) and sys.argv[pos] or None
 
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ## Setup Values
@@ -20,8 +21,8 @@ channel = getarg(1) or 'server'
 pubnub  = PubnubNetwork(
     "pub-c-f73c9874-8d1e-4356-8ad2-e63ebb9d5cc7",  ## PUBLISH_KEY
     "sub-c-fe7719da-bd85-11e2-8f85-02ee2ddab7fe",  ## SUBSCRIBE_KEY
-    None,                                          ## SECRET_KEY
-    True                                           ## SSL_ON
+    None,
+    True    ## SSL IS ENABLED
 )
 
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -57,10 +58,11 @@ def request(url):
 def receiver(message):
     try:
         url      = "/".join((message['request']['url']or'///').split('/')[3:])
-        response = request("http://0.0.0.0/%s" % url)
+        response = request("http://localhost/%s" % url)[:18000]
 
         print("PROXYING: %s" % url)
         print("RESPONSE: %s" % response)
+        print("RESPONSE-SIZE: %s" % len(response))
         print("BROKER: %s" % pubnub.publish({
             'channel' : message['response_channel'],
             'message' : {
