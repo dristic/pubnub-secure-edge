@@ -12,7 +12,7 @@ import urllib2
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ## Get Args
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-def getarg(pos): return pos <= len(sys.argv) and sys.argv[pos] or None
+def getarg(pos): return pos < len(sys.argv) and sys.argv[pos] or None
 
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ## Setup Values
@@ -50,6 +50,7 @@ def request(url):
         usock.close()
         return response
     except:
+        print( "ERROR:", sys.exc_info()[0] )
         return "404: %s " % url
 
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -57,13 +58,15 @@ def request(url):
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 def receiver(message):
     try:
-        url      = message['request']['url']or'///'
-        url      = "/".join((url).split('/')[3:])
-        if '#' in url: url = url.split('#')[1]
-        response = request("http://localhost/%s" % url)[:18000]
+        url = message['request']['url'] or '///'
+        url = "/".join((url).split('/')[3:])
 
-        print("PROXYING: %s" % url)
+        if '#' in url: url = url.split('#')[1]
+
+        response = request("http://localhost/%s" % url)[:15000]
+
         #print("RESPONSE: %s" % response)
+        print("PROXYING: %s" % url)
         print("RESPONSE-SIZE: %s" % len(response))
         print("BROKER: %s" % pubnub.publish({
             'channel' : message['response_channel'],

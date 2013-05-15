@@ -370,13 +370,12 @@ class Pubnub():
             '0'
         ])[0]
 
-
     def _encode( self, request ) :
         return [
-            "".join([ ' ~`!@#$%^&*()+=[]\\{}|;\':",./<>?'.find(ch) > -1 and
+            "".join([ ' ~`#&\\/?'.find(ch) > -1 and
                 hex(ord(ch)).replace( '0x', '%' ).upper() or
                 ch for ch in list(bit)
-            ]) for bit in request]
+            ]).replace('  ',' ') for bit in request]
 
 
     def _request( self, request, origin = None, encode = True, params = None ) :
