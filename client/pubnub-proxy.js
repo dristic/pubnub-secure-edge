@@ -113,7 +113,9 @@ document.addEventListener('DOMContentLoaded', function (event) {
     });
 
     window.XMLHttpRequest.prototype.open = function () {
+      console.log(arguments);
 
+      return proxy.sendRequest(arguments[1], arguments[0]);
     }
 
   }).call(window, window);
