@@ -3,10 +3,15 @@ PubNub Proxy
 
 ![PubNub Proxy](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-852px.png)
 
-The PubNub Proxy takes a web request and proxies it through the PubNub service. This allows your web site to be completely behind a firewall yet still accept and respond to web requests.
+The PubNub Proxy takes a web request and proxies it through the PubNub service.
+This allows your web site to be completely behind a firewall yet still accept
+and respond to web requests.
 
 # JavaScript Client
-The client works by making the initial page request and optionally intercepting all AJAX and link requests after the page is loaded. The first step is initialzing a connection with pubnub and then initializing the proxy object.
+The client works by making the initial page request and optionally
+intercepting all AJAX and link requests after the page is loaded.
+The first step is initialzing a connection with pubnub and then
+initializing the proxy object.
 
 ```javascript
 // Initialize the PubNub connection.
@@ -27,6 +32,28 @@ this.proxy = new PubNubProxy({
   }
 });
 ```
+
+## Video Details
+
+>PubNub - Close Your Firewall
+
+1.) Show URL.
+2.) Close Firewall.
+3.) Show Inaccessible URL.
+4.) Show Bootstrap w/ PubNub Termintor: ./pubnub-proxy/client/index.html#web/example.html
+5.) Done!
+
+### Limitations
+
+Note that there are limitations.
+
+1.) Max Message Size: 7.4KB - Solution is to Chunk Responses beyond this range.
+2.) Right now the terminators establish Public Routes which means anyone, anywhere, can send/receive information based on channel ID.  However this can be resolved in several fashions. 
+    1.) One way is to use two sets of PubNub keys to prevent a rouge injecting feedback responses altogether.  Done.
+    2.) In addition you can also enable Cipher Key AES Cryptography, Bidirectionally!  Obviously as long as you don't transmit the cipher key, rouges are blocked from intercepting the inbound request.  
+    3.) Also PubNub is working on a new edge based perimeter service which provides enhanced authority controls routes and clients.
+
+
 
 # PubNubProxy
 ## constructor([options])
