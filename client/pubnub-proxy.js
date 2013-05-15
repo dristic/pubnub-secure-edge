@@ -63,6 +63,8 @@ document.addEventListener('DOMContentLoaded', function (event) {
     function PubNubProxy(options) {
       var self = this;
 
+      options = options || {};
+
       this.options = options;
       this.connection = options.connection;
       this.uuid = options.uuid || this.connection.uuid();
@@ -160,8 +162,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
     // Initialize the PubNub connection.
     this.pubnub = PUBNUB.init({
       subscribe_key: "sub-c-fe7719da-bd85-11e2-8f85-02ee2ddab7fe",
-      publish_key: "pub-c-f73c9874-8d1e-4356-8ad2-e63ebb9d5cc7",
-      uuid: 'client'
+      publish_key: "pub-c-f73c9874-8d1e-4356-8ad2-e63ebb9d5cc7"
     });
 
     // Initialize the proxy object.
