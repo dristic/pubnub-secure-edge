@@ -23,7 +23,7 @@ this.proxy = new PubNubProxy({
   intercept_forms: true,
   callback: function () {
     // Call the first page request.
-    proxy.sendRequest(window.location.href, METHOD.GET);
+    proxy.sendRequest(window.location.href, "GET");
   }
 });
 ```
