@@ -1,3 +1,51 @@
+/*
+ * DOMParser HTML extension
+ * 2012-09-04
+ * 
+ * By Eli Grey, http://eligrey.com
+ * Public domain.
+ * NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+ */
+ 
+/*! @source https://gist.github.com/1129031 */
+/*global document, DOMParser*/
+ 
+(function(DOMParser) {
+    "use strict";
+ 
+    var
+      DOMParser_proto = DOMParser.prototype
+    , real_parseFromString = DOMParser_proto.parseFromString
+    ;
+ 
+    // Firefox/Opera/IE throw errors on unsupported types
+    try {
+        // WebKit returns null on unsupported types
+        if ((new DOMParser).parseFromString("", "text/html")) {
+            // text/html parsing is natively supported
+            return;
+        }
+    } catch (ex) {}
+ 
+    DOMParser_proto.parseFromString = function(markup, type) {
+        if (/^\s*text\/html\s*(?:;|$)/i.test(type)) {
+            var doc = document.documentElement.cloneNode();
+                if (markup.toLowerCase().indexOf('<!doctype') > -1) {
+                    doc.innerHTML = markup;
+                }
+                else {
+                    doc.innerHTML = "<!DOCTYPE html><html>"
+                      + "<head><title></title></head>"
+                      + "<body>" + markup + "</body>"
+                      + "</html>";
+                }
+            return doc;
+        } else {
+            return real_parseFromString.apply(this, arguments);
+        }
+    };
+}(DOMParser));
+
 document.addEventListener('DOMContentLoaded', function (event) {
   (function (window) {
     var METHOD = {
@@ -14,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
       this.connection = connection;
       this.uuid = uuid;
 
+      console.log("connecting...");
       this.connection.subscribe({
         channel: this.uuid,
         callback: this.handleResponse,
@@ -25,12 +74,12 @@ document.addEventListener('DOMContentLoaded', function (event) {
       console.log('response', message);
 
       if (message.html) {
-        var div = document.createElement('div');
-        div.innerHTML = message.html;
-        var elements = div.childNodes;
+        var parser = new DOMParser();
+        var element = parser.parseFromString("<div>" + message.html + "</div>", 'text/html');
 
-        var htmlEl = document.querySelector('html');
-        htmlEl.parentNode.replaceChild(elements, htmlEl);
+        console.log(element);
+
+        document.replaceChild(element, document.documentElement);
       }
     };
 
