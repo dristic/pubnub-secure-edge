@@ -49,15 +49,15 @@ def request(url):
         usock.close()
         return response
     except:
-        return "Error reading from: %s " % url
+        return "404: %s " % url
 
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ## Listen for HTTP Requests and Broker
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 def receiver(message):
     try:
-        url      = message['request']['url']
-        response = request(url)
+        url      = "/".join((message['request']['url']or'///').split('/')[3:])
+        response = request("http://0.0.0.0/%s" % url)
 
         print("PROXYING: %s" % url)
         print("RESPONSE: %s" % response)
