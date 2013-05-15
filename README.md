@@ -50,3 +50,11 @@ Sends a request to the proxy server for a given page. Example:
   
 ## destroy()
 Unsubscribes from the user response channel and deletes all object references.
+
+# Python Proxy Server
+
+The server is started by cd-ing into the server directory and running
+
+    python server.py <channel name (usually server)>
+
+This will start the proxy server locally and redirect all commands to localhost:80
