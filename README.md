@@ -36,11 +36,13 @@ this.secureEdge = new PubNubSecureEdge({
 });
 ```
 
+# Traditional REST vs PubNbu Secure Edge
+
 ## Traditional REST API
 
 ![PubNub Secure Edge](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-traditional-rest.png)
 
-## PubNub Network Terminators
+## vs. PubNub Secure Edge
 
 ![PubNub Secure Edge](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-terminators.png)
 
@@ -48,7 +50,11 @@ this.secureEdge = new PubNubSecureEdge({
 
 The server is started by cd-ing into the server directory and running
 
-    python server.py <channel name (usually server)>
+    ./server.py <channel name>
+
+#### Example
+
+    ./server.py server
 
 This will start the secure edge terminator locally and redirect all traffic to `localhost:80`.
 
