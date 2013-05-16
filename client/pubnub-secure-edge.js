@@ -58,9 +58,9 @@ document.addEventListener('DOMContentLoaded', function (event) {
     };
 
     /////
-    // PubNub Proxy Class
+    // PubNub Secure Edge Class
     ///////
-    function PubNubProxy(options) {
+    function PubNubSecureEdge(options) {
       var self = this;
 
       options = options || {};
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
       }
     }
 
-    PubNubProxy.prototype.handleResponse = function (message) {
+    PubNubSecureEdge.prototype.handleResponse = function (message) {
       console.log('response', message);
 
       if (message.html) {
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
       }
     };
 
-    PubNubProxy.prototype.postRender = function() {
+    PubNubSecureEdge.prototype.postRender = function() {
       if (this.options.intercept_links === true) {
         var links = document.querySelectorAll('a');
         for (var i = links.length - 1; i >= 0; i--) {
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
       }
     };
 
-    PubNubProxy.prototype.sendRequest = function (url, method) {
+    PubNubSecureEdge.prototype.sendRequest = function (url, method) {
       var request = {
         response_channel: this.uuid,
         request: {
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
       });
     };
 
-    PubNubProxy.prototype.interceptAjax = function () {
+    PubNubSecureEdge.prototype.interceptAjax = function () {
       var open = XMLHttpRequest.prototype.open,
           self = this;
       XMLHttpRequest.prototype.open = function (method, url) {
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
       }
     };
 
-    PubNubProxy.prototype.destroy = function() {
+    PubNubSecureEdge.prototype.destroy = function() {
       this.connection.unsubscribe({
         channel: this.uuid
       });
@@ -165,8 +165,8 @@ document.addEventListener('DOMContentLoaded', function (event) {
       publish_key: "pub-c-f73c9874-8d1e-4356-8ad2-e63ebb9d5cc7"
     });
 
-    // Initialize the proxy object.
-    this.proxy = new PubNubProxy({
+    // Initialize the secure edge object.
+    this.secureEdge = new PubNubSecureEdge({
       connection: this.pubnub,
       //uuid: 'client',
       intercept_ajax: true,
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
       intercept_forms: true,
       callback: function () {
         // Call the first page request.
-        proxy.sendRequest(window.location.href, METHOD.GET);
+        secureEdge.sendRequest(window.location.href, METHOD.GET);
       }
     });
 
