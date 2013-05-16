@@ -1,11 +1,11 @@
-PubNub Proxy
-===============
+PubNub Secure Edge
+==================
 
-Close your Firewall 100%.
+Close your Firewall 100% and use the PubNub Global Real-time Network.
 
-![PubNub Proxy](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-852px.png)
+![PubNub Secure Edge](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-852px.png)
 
-The PubNub Proxy takes a *HTTP Traffic* and routes requests through the PubNub Network.
+The **PubNub Secure Edge** takes a *HTTP Traffic* and routes requests through the PubNub Network.
 This allows your web site to be behind a 100% closed firewall yet still accept
 and respond to web requests.
 
@@ -14,7 +14,7 @@ and respond to web requests.
 The client works by making the initial page request and optionally
 intercepting all AJAX and link requests after the page is loaded.
 The first step is initialzing a connection with pubnub and then
-initializing the proxy object.
+initializing the secure edge object.
 
 ```javascript
 // Initialize the PubNub connection.
@@ -23,26 +23,26 @@ this.pubnub = PUBNUB.init({
   publish_key: "demo"
 });
 
-// Initialize the proxy object.
-this.proxy = new PubNubProxy({
+// Initialize the secure edge object.
+this.secureEdge = new PubNubSecureEdge({
   connection: this.pubnub,
   intercept_ajax: true,
   intercept_links: true,
   intercept_forms: true,
   callback: function () {
     // Call the first page request.
-    proxy.sendRequest(window.location.href, "GET");
+    secureEdge.sendRequest(window.location.href, "GET");
   }
 });
 ```
 
 ## Traditional REST API
 
-![PubNub Proxy](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-traditional-rest.png)
+![PubNub Secure Edge](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-traditional-rest.png)
 
 ## PubNub Network Terminators
 
-![PubNub Proxy](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-traditional-rest.png)
+![PubNub Secure Edge](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-traditional-rest.png)
 
 # PubNub Python Terminator
 
@@ -50,7 +50,7 @@ The server is started by cd-ing into the server directory and running
 
     python server.py <channel name (usually server)>
 
-This will start the proxy server locally and redirect all commands to localhost:80
+This will start the secure edge terminator locally and redirect all traffic to `localhost:80`.
 
 ## Video Details
 
@@ -59,7 +59,7 @@ This will start the proxy server locally and redirect all commands to localhost:
  1. Show URL via Port 80 Request.
  2. Close all Ports on the EC2 Firewall.
  3. Show Inaccessible URL.
- 4. Show Bootstrap w/ PubNub Termintor: ./pubnub-proxy/client/index.html#web/example.html
+ 4. Show Bootstrap w/ PubNub Termintor: ./client/index.html#web/example.html
  5. It works!
 
 ### Practical Applications
@@ -78,27 +78,27 @@ Note that there are limitations.
     3. Also PubNub is working on a new edge based perimeter service which provides enhanced authority controls routes and clients.
 
 
-![PubNub Proxy](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-852px.png)
+![PubNub Secure Edge](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-852px.png)
 
-# PubNubProxy JS Class
+# PubNubSecureEdge JS Class
 ## constructor([options])
 Sets up all interceptions that are turned on and subscribes to page updates.
 
 Options:
 * _connection_ The pubnub connection object.
 * _uuid_ (optional) A custom UUID if the connection was created with one.
-* _intercept_ajax_ (optional) If the proxy should intercept all AJAX calls.
-* _intercept_links_ (optional) If the proxy should intercept anchor tag clicks.
-* _intercept_forms_ (optional) If the proxy should intercept form posts.
-* _callback_ (optional) The function to call after the proxy has subscribed to the user channel.
+* _intercept_ajax_ (optional) If the secure edge should intercept all AJAX calls.
+* _intercept_links_ (optional) If the secure edge should intercept anchor tag clicks.
+* _intercept_forms_ (optional) If the secure edge should intercept form posts.
+* _callback_ (optional) The function to call after the secure edge has subscribed to the user channel.
 
 ## handleResponse(message)
-Handles the proxy response from the server. Looks for message.html to load into the window.
+Handles the secure edge response from the server. Looks for message.html to load into the window.
 
 ## sendRequest(url, method)
-Sends a request to the proxy server for a given page. Example:
+Sends a request to the secure edge server for a given page. Example:
 
-  proxy.sendRequest('http://pubnub.com/about', 'GET');
+  secureEdge.sendRequest('http://pubnub.com/about', 'GET');
   
 ## destroy()
 Unsubscribes from the user response channel and deletes all object references.
