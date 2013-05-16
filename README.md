@@ -42,7 +42,7 @@ this.secureEdge = new PubNubSecureEdge({
 
 ## PubNub Network Terminators
 
-![PubNub Secure Edge](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-traditional-rest.png)
+![PubNub Secure Edge](http://pubnub.s3.amazonaws.com/assets/pubnub-proxy-terminators.png)
 
 # PubNub Python Terminator
 
